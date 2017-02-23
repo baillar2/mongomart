@@ -115,7 +115,39 @@ function ItemDAO(database) {
         for (var i=0; i<5; i++) {
             pageItems.push(pageItem);
         }
+        if (category == 'All'){
+            this.db.collection('item').find()
+            .sort({_id: 1})
+            .skip(page* 5)
+            .limit(itemsPerPage)
+            .forEach(function (doc){
+                pageItems.push(doc)
+                console.log('page array', pageItems)
+            }, function (err){
+                if (err) {
+                    console.log(err)
+                    return
+                    }
+                callback(pageItems)
+                }
+        }    
 
+
+         else {   
+        this.db.collection.('items').find({'category': category})
+            .sort({-id: 1})
+            .skip(page * 5)
+            .limit(itemsPerPage)
+            .forEach(function (doc){
+                pageItems.push(doc)
+                console.log('page array', pageitems)
+            })
+            if (err) {
+                console.log(err)
+                return
+            }}
+            callback(pageItems)
+        
         // TODO-lab1B Replace all code above (in this method).
 
         // TODO Include the following line in the appropriate
