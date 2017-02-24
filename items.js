@@ -110,11 +110,11 @@ function ItemDAO(database) {
          *
          */
 
-        var pageItem = this.createDummyItem();
+        //var pageItem = this.createDummyItem();
         var pageItems = [];
-        for (var i=0; i<5; i++) {
-            pageItems.push(pageItem);
-        }
+        //for (var i=0; i<5; i++) {
+        //   pageItems.push(pageItem);
+        //}
         if (category == 'All'){
             this.db.collection('item').find()
             .sort({_id: 1})
@@ -123,37 +123,41 @@ function ItemDAO(database) {
             .forEach(function (doc){
                 pageItems.push(doc)
                 console.log('page array', pageItems)
-            }, function (err){
+            }, 
+            function (err){
                 if (err) {
                     console.log(err)
                     return
                     }
                 callback(pageItems)
-                }
+                })
         }    
 
 
          else {   
-        this.db.collection.('items').find({'category': category})
-            .sort({-id: 1})
+        this.db.collection('item').find({'category': category})
+            .sort({_d: 1})
             .skip(page * 5)
             .limit(itemsPerPage)
             .forEach(function (doc){
                 pageItems.push(doc)
                 console.log('page array', pageitems)
-            })
+            }, function(err){
             if (err) {
                 console.log(err)
-                return
-            }}
-            callback(pageItems)
+                return;
+                }
+                callback(pageItems)
+            })
+        }    
+            
         
         // TODO-lab1B Replace all code above (in this method).
 
         // TODO Include the following line in the appropriate
         // place within your code to pass the items for the selected page
         // to the callback.
-        callback(pageItems);
+        
     }
 
 
