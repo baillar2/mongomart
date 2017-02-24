@@ -136,7 +136,7 @@ function ItemDAO(database) {
 
          else {   
         this.db.collection('item').find({'category': category})
-            .sort({_d: 1})
+            .sort({_id: 1})
             .skip(page * 5)
             .limit(itemsPerPage)
             .forEach(function (doc){
@@ -234,13 +234,26 @@ function ItemDAO(database) {
         for (var i=0; i<5; i++) {
             items.push(item);
         }
-
+        this.db.collection('item').find({ $text: { $search: query}})
+            .sort({_id: 1})
+            .skip(page * 5)
+            .limit(itemsPerPage)
+            .forEach(function (doc){
+                items.push(doc)
+                console.log('items array', items)
+            }, function(err){
+                if (err) {
+                    console.log(err)
+                    return
+                }
+                callback(item)
+            })
         // TODO-lab2A Replace all code above (in this method).
 
         // TODO Include the following line in the appropriate
         // place within your code to pass the items for the selected page
         // of search results to the callback.
-        callback(items);
+        
     }
 
 
