@@ -141,7 +141,7 @@ function ItemDAO(database) {
             .limit(itemsPerPage)
             .forEach(function (doc){
                 pageItems.push(doc)
-                console.log('page array', pageitems)
+                console.log('page array', pageItems)
             }, function(err){
             if (err) {
                 console.log(err)
@@ -180,10 +180,25 @@ function ItemDAO(database) {
          * of a call to the getNumItems() method.
          *
          */
-
+         if (category == 'All'){
+            this.db.collection('item').find()
+            .count(function(err, count){
+                callback(count)
+            })
+         }
+         else {
+            this.db.collection('item').find({'category': category})
+            .count(function(err, count){ 
+                if(err) {
+                    console.log(err)
+                    return
+                }
+                callback(count)
+            })
+        }
          // TODO Include the following line in the appropriate
          // place within your code to pass the count to the callback.
-        callback(numItems);
+        //callback(numItems);
     }
 
 
