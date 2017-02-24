@@ -240,7 +240,7 @@ function ItemDAO(database) {
                     console.log(err)
                     return
                 }
-                console.log('items array', items)
+                //console.log('items array', items)
                 callback(items)
             })
         // TODO-lab2A Replace all code above (in this method).
@@ -349,13 +349,23 @@ function ItemDAO(database) {
 
         // TODO replace the following two lines with your code that will
         // update the document with a new review.
-        var doc = this.createDummyItem();
-        doc.reviews = [reviewDoc];
+        
+        this.db.collection('item').findAndModify({_id: itemId}, 
+                        {$addToSet: {'reviews': reviewDoc}}, {new: true},
+                         function(err, doc){
+                            if (err) {
+                                console.log(err)
+                                return
+                            }
+                            console.log(doc)
+                            callback(doc)
+                        })
+        
 
         // TODO Include the following line in the appropriate
         // place within your code to pass the updated doc to the
         // callback.
-        callback(doc);
+        
     }
 
 
