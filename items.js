@@ -64,7 +64,7 @@ function ItemDAO(database) {
             }}
         ]).forEach(function (doc){
             categories.push(doc)   
-            console.log('array', categories)
+            //console.log('array', categories)
             categories[0].num += doc.num
             
             }, function(err){
@@ -110,11 +110,8 @@ function ItemDAO(database) {
          *
          */
 
-        //var pageItem = this.createDummyItem();
         var pageItems = [];
-        //for (var i=0; i<5; i++) {
-        //   pageItems.push(pageItem);
-        //}
+        
         if (category == 'All'){
             this.db.collection('item').find()
             .sort({_id: 1})
@@ -122,13 +119,13 @@ function ItemDAO(database) {
             .limit(itemsPerPage)
             .forEach(function (doc){
                 pageItems.push(doc)
-                console.log('page array', pageItems)
             }, 
             function (err){
                 if (err) {
                     console.log(err)
                     return
                     }
+                //console.log("all array", pageItems)
                 callback(pageItems)
                 })
         }    
@@ -141,12 +138,12 @@ function ItemDAO(database) {
             .limit(itemsPerPage)
             .forEach(function (doc){
                 pageItems.push(doc)
-                console.log('page array', pageItems)
             }, function(err){
             if (err) {
                 console.log(err)
                 return;
                 }
+                //console.log("category array", pageItems)
                 callback(pageItems)
             })
         }    
@@ -229,24 +226,22 @@ function ItemDAO(database) {
          *
          */
 
-        var item = this.createDummyItem();
+        
         var items = [];
-        for (var i=0; i<5; i++) {
-            items.push(item);
-        }
+        
         this.db.collection('item').find({ $text: { $search: query}})
             .sort({_id: 1})
             .skip(page * 5)
             .limit(itemsPerPage)
             .forEach(function (doc){
                 items.push(doc)
-                console.log('items array', items)
             }, function(err){
                 if (err) {
                     console.log(err)
                     return
                 }
-                callback(item)
+                console.log('items array', items)
+                callback(items)
             })
         // TODO-lab2A Replace all code above (in this method).
 
@@ -262,6 +257,15 @@ function ItemDAO(database) {
 
         var numItems = 0;
 
+        this.db.collection('item').find({ $text: { $search: query}})
+            .count(function(err, numItems){ 
+                if(err) {
+                    console.log(err)
+                    return
+                }
+                
+                callback(numItems)
+            })
         /*
         * TODO-lab2B
         *
@@ -275,7 +279,6 @@ function ItemDAO(database) {
         * simply do this in the mongo shell.
         */
 
-        callback(numItems);
     }
 
 
@@ -294,12 +297,19 @@ function ItemDAO(database) {
 
         var item = this.createDummyItem();
 
+        this.db.collection('item').findOne({_id: itemId}, function(err, item){
+            if (err) {
+                console.log(err)
+                return
+            }
+            callback(item)
+        })
         // TODO-lab3 Replace all code above (in this method).
 
         // TODO Include the following line in the appropriate
         // place within your code to pass the matching item
         // to the callback.
-        callback(item);
+        
     }
 
 
