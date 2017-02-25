@@ -295,7 +295,7 @@ function ItemDAO(database) {
          *
          */
 
-        var item = this.createDummyItem();
+        //var item = this.createDummyItem();
 
         this.db.collection('item').findOne({_id: itemId}, function(err, item){
             if (err) {
@@ -346,18 +346,18 @@ function ItemDAO(database) {
             stars: stars,
             date: Date.now()
         }
-
+        console.log('review', reviewDoc)
         // TODO replace the following two lines with your code that will
         // update the document with a new review.
         
-        this.db.collection('item').findAndModify({_id: itemId}, 
+        this.db.collection('item').findAndModify({_id: itemId},{_id:1}, 
                         {$addToSet: {'reviews': reviewDoc}}, {new: true},
                          function(err, doc){
+                            console.log('**********returned document', doc)
                             if (err) {
                                 console.log(err)
                                 return
                             }
-                            console.log(doc)
                             callback(doc)
                         })
         
